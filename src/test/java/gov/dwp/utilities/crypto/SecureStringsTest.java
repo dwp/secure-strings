@@ -47,8 +47,14 @@ public class SecureStringsTest {
         assertTrue(localSecureString.revealString(anObject) == null);
     }
 
-    @Test (expected=NoSuchAlgorithmException.class)
+    @Test(expected = NoSuchAlgorithmException.class)
     public void testToValidateConstructorWithInvalidCryptoType() throws NoSuchAlgorithmException {
         SecureStrings testSecureString = new SecureStrings("Bob");
+    }
+
+    @Test
+    public void testStoringStringAsNullCanBeDecrypted() {
+        anObject = localSecureString.sealString(null);
+        assertTrue("This should return null", localSecureString.revealString(anObject) == null);
     }
 }

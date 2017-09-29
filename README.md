@@ -1,36 +1,75 @@
-This project is to make it easy to store passwords in encrypted form within configuration files in other projects.
-CheckMarx has highlighted this as an issue and the use case and therefore code is similar across many projects.
+## SecureStrings
+This project is to make it easy to store passwords in an encrypted form using a cipher that is constructed inside the application and is different for every instance.
 
-Example of use:
+This was created to mitigate the Checkmarx vulnerability **Heap_Inspection**:-
 
-public class MyConfiguration {
+`String variables are immutable - in other words, once a string variable is assigned, its value cannot be changed or removed. Thus, these strings may remain around in memory, possibly in multiple locations, for an indefinite period of time until the garbage collector happens to remove it. Sensitive data, such as passwords, will remain exposed in memory as plaintext with no control over their lifetime.`
 
-    private SecureStrings secureStrings = null;
+####Project inclusion
 
-    private SealedObject aPassword = null;
+properties entry in pom
 
-    private String aPath; 
+    <properties>
+        <dwp.securestrings.version>x.x</dwp.securestrings.version>
+    </properties>
     
-    MyConfiguration(SecureStrings localSecureStrings){
-        secureStrings = localSecureStrings;
+internal Artifactory repository reference is required (plugin reference required for OWASP checks)
+
+    <repositories>
+        <repository>
+            <id>dwp internal</id>
+            <url>###REPOSITORY_URL###</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>dwp internal</id>
+            <url>###REPOSITORY_URL###</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+dependency reference
+
+    <dependency>
+        <groupId>gov.dwp.software-engineering</groupId>
+        <artifactId>securestrings</artifactId>
+        <version>${dwp.securestrings.version}</version>
+    </dependency>
+####Example of use
+
+    import gov.dwp.utilities.crypto.SecureStrings;
+    import javax.crypto.SealedObject;
+
+_Standard implementation_
+
+    public class Pojo {
+        private SecureStrings secureStrings = new SecureStrings();
+        private SealedObject password = null;
+    
+        public String getPassword() {
+            return secureStrings.revealString(password);
+        }
+    
+        public void setPassword(String password) {
+            this.password = secureStrings.sealString(password);
+        }
     }
+
+_Injected class_
+
+    public class Pojo {
+        private SecureStrings secureStrings = null;
+        private SealedObject password = null;
     
-    public String getAPassword(){
-        return secureStrings.revealString(aPassword, "aPassword");
+        public Pojo(SecureStrings secureStrings) {
+            this.secureStrings = secureStrings;
+        }
+    
+        public String getPassword() {
+            return secureStrings.revealString(password);
+        }
+    
+        public void setPassword(String password) {
+            this.password = secureStrings.sealString(password);
+        }
     }
-    public void setAPassword(String input){
-        aPassword = secureStrings.sealString(input, "aPassword");
-    }
-    
-    public String getAPath(){ return aPath; }
-    public void setAPath(String input) { aPath = input; }
-}
-
-
-
-//************Within application****************//
-
-    MyConfiguration config = new MyConfiguration(new SecureStrings);
-    
-    config.setAPassword("Some Password");
-    config.setAPath("What_Ever_Path");
