@@ -8,13 +8,6 @@
         </layout>
     </appender>
     
-    <!--  Capture JMS DEBUG to ensure we get exception details
-    	  Should be able to remove this when proper error handling is present on the routes 
-     -->
-    <logger name="org.apache.camel.component.jms">
-    	<level value="DEBUG"/>
-    </logger>
-    
     <root>
         <priority value="INFO"/>
         <appender-ref ref="console"/>

@@ -1,5 +1,8 @@
 package gov.dwp.utilities.crypto;
 
+import com.fasterxml.jackson.core.SerializableString;
+import com.fasterxml.jackson.core.io.CharacterEscapes;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import gov.dwp.utilities.logging.DwpEncodedLogger;
 import org.apache.log4j.Logger;
 
@@ -11,6 +14,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SealedObject;
 import java.io.IOException;
 import java.security.InvalidKeyException;
+import java.security.InvalidParameterException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 
@@ -99,5 +103,34 @@ public class SecureStrings {
             LOGGER.debug(e);
         }
         return null;
+    }
+
+    public static <T> T escapedJSONObjectFromString(String inputString, Class<T> type) throws IOException {
+        T returnValue;
+        if (inputString != null && inputString.trim().length() != 0) {
+            final CharacterEscapes jsonCharacterEscapes = generateJSONCharacterEscapes();
+            final ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.getFactory().setCharacterEscapes(jsonCharacterEscapes);
+            returnValue = objectMapper.readValue(inputString, type);
+        } else {
+            throw new InvalidParameterException("A JSON payload must be specified");
+        }
+        return returnValue;
+    }
+
+    private static CharacterEscapes generateJSONCharacterEscapes() {
+        return new CharacterEscapes() {
+            private static final long serialVersionUID = 11L;
+
+            @Override
+            public int[] getEscapeCodesForAscii() {
+                return standardAsciiEscapesForJSON();
+            }
+
+            @Override
+            public SerializableString getEscapeSequence(final int ch) {
+                return null;
+            }
+        };
     }
 }
