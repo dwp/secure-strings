@@ -5,7 +5,7 @@ This was created to mitigate the Checkmarx vulnerability **Heap_Inspection**:-
 
 `String variables are immutable - in other words, once a string variable is assigned, its value cannot be changed or removed. Thus, these strings may remain around in memory, possibly in multiple locations, for an indefinite period of time until the garbage collector happens to remove it. Sensitive data, such as passwords, will remain exposed in memory as plaintext with no control over their lifetime.`
 
-####Project inclusion
+#### Project inclusion
 
 properties entry in pom
 
@@ -35,7 +35,7 @@ dependency reference
         <artifactId>securestrings</artifactId>
         <version>${dwp.securestrings.version}</version>
     </dependency>
-####Example of use
+#### Example of use
 
     import gov.dwp.utilities.crypto.SecureStrings;
     import javax.crypto.SealedObject;
