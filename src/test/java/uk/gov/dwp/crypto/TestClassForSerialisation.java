@@ -1,4 +1,4 @@
-package gov.dwp.utilities.crypto;
+package uk.gov.dwp.crypto;
 
 public class TestClassForSerialisation {
     private int testInteger;

@@ -1,4 +1,4 @@
-package gov.dwp.utilities.crypto;
+package uk.gov.dwp.crypto;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import org.junit.Before;
@@ -14,13 +14,12 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-
 public class SecureStringsTest {
     private SecureStrings localSecureString;
     private SealedObject anObject;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         localSecureString = new SecureStrings();
         anObject = null;
     }

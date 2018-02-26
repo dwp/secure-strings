@@ -1,7 +1,7 @@
 ## SecureStrings
 This project is to make it easy to store passwords in an encrypted form using a cipher that is constructed inside the application and is different for every instance.
 
-This was created to mitigate the Checkmarx vulnerability **Heap_Inspection**:-
+This was created to mitigate the **Heap_Inspection** vulnerability:-
 
 `String variables are immutable - in other words, once a string variable is assigned, its value cannot be changed or removed. Thus, these strings may remain around in memory, possibly in multiple locations, for an indefinite period of time until the garbage collector happens to remove it. Sensitive data, such as passwords, will remain exposed in memory as plaintext with no control over their lifetime.`
 
@@ -12,32 +12,17 @@ properties entry in pom
     <properties>
         <dwp.securestrings.version>x.x</dwp.securestrings.version>
     </properties>
-    
-internal Artifactory repository reference is required (plugin reference required for OWASP checks)
-
-    <repositories>
-        <repository>
-            <id>dwp internal</id>
-            <url>###REPOSITORY_URL###</url>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>dwp internal</id>
-            <url>###REPOSITORY_URL###</url>
-        </pluginRepository>
-    </pluginRepositories>
 
 dependency reference
 
     <dependency>
-        <groupId>gov.dwp.software-engineering</groupId>
-        <artifactId>securestrings</artifactId>
+        <groupId>uk.gov.dwp.crypto</groupId>
+        <artifactId>secure-strings</artifactId>
         <version>${dwp.securestrings.version}</version>
     </dependency>
 #### Example of use
 
-    import gov.dwp.utilities.crypto.SecureStrings;
+    import uk.gov.dwp.crypto.SecureStrings;
     import javax.crypto.SealedObject;
 
 _Standard implementation_
@@ -61,6 +46,7 @@ _Injected class_
         private SecureStrings secureStrings = null;
         private SealedObject password = null;
     
+        @Inject
         public Pojo(SecureStrings secureStrings) {
             this.secureStrings = secureStrings;
         }

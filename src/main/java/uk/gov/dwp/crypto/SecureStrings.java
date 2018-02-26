@@ -1,9 +1,9 @@
-package gov.dwp.utilities.crypto;
+package uk.gov.dwp.crypto;
 
 import com.fasterxml.jackson.core.SerializableString;
 import com.fasterxml.jackson.core.io.CharacterEscapes;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gov.dwp.utilities.logging.DwpEncodedLogger;
+import uk.gov.dwp.logging.DwpEncodedLogger;
 import org.apache.log4j.Logger;
 
 import javax.crypto.BadPaddingException;
@@ -31,7 +31,7 @@ public class SecureStrings {
         try {
             initialiseCiphers("AES");
         } catch (NoSuchAlgorithmException e) {
-            LOGGER.error(String.format("Error initialiseCiphers %s", e.getMessage()));
+            LOGGER.error(String.format("initialiseCiphers error : %s", e.getMessage()));
             LOGGER.debug(e);
         }
     }
@@ -63,7 +63,7 @@ public class SecureStrings {
                 cipherEncrypt.init(Cipher.ENCRYPT_MODE, tempKey);
                 cipherDecrypt.init(Cipher.DECRYPT_MODE, tempKey);
             } catch (NoSuchPaddingException | InvalidKeyException e) {
-                LOGGER.error(String.format("Error initialiseCiphers object %s", e.getMessage()));
+                LOGGER.error(String.format("initialiseCiphers object error : %s", e.getMessage()));
                 LOGGER.debug(e);
             }
         }
@@ -81,7 +81,7 @@ public class SecureStrings {
         try {
             returnValue = new SealedObject(input, cipherEncrypt);
         } catch (IOException | IllegalBlockSizeException e) {
-            LOGGER.error(String.format("Error setting input : %s", e.getMessage()));
+            LOGGER.error(String.format("error sealing input : %s", e.getMessage()));
             LOGGER.debug(e);
         }
         return returnValue;
@@ -99,7 +99,7 @@ public class SecureStrings {
         if (null != inputObject) try {
             return (String) inputObject.getObject(cipherDecrypt); //using cast to allow for null string input
         } catch (IOException | BadPaddingException | IllegalBlockSizeException | ClassNotFoundException e) {
-            LOGGER.error(String.format("Error getting string : %s", e.getMessage()));
+            LOGGER.error(String.format("error unsealing string : %s", e.getMessage()));
             LOGGER.debug(e);
         }
         return null;
