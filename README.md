@@ -1,4 +1,6 @@
-## SecureStrings
+## secure-strings
+[![Build Status](https://travis-ci.org/dwp/secure-strings.svg?branch=master)](https://travis-ci.org/dwp/secure-strings) [![Known Vulnerabilities](https://snyk.io/test/github/dwp/secure-strings/badge.svg)](https://snyk.io/test/github/dwp/secure-strings)
+
 This project is to make it easy to store passwords in an encrypted form using a cipher that is constructed inside the application and is different for every instance.
 
 This was created to mitigate the **Heap_Inspection** vulnerability:-
