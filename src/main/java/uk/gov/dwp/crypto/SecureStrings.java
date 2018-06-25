@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.SerializableString;
 import com.fasterxml.jackson.core.io.CharacterEscapes;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
-import uk.gov.dwp.logging.DwpEncodedLogger;
+import org.slf4j.LoggerFactory;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -19,7 +19,7 @@ import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 
 public class SecureStrings {
-    private static final Logger LOGGER = DwpEncodedLogger.getLogger(SecureStrings.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(SecureStrings.class.getName());
     private Cipher cipherEncrypt = null;
     private Cipher cipherDecrypt = null;
 
