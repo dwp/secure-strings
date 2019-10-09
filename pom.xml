@@ -6,7 +6,7 @@
 
     <groupId>uk.gov.dwp.crypto</groupId>
     <artifactId>secure-strings</artifactId>
-    <version>1.5.1</version>
+    <version>1.5.2</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Utility for storing passwords in memory encrypted form to prevent heap inspection</description>
@@ -43,14 +43,14 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jackson-data.version>2.9.8</jackson-data.version>
+        <jackson-data.version>2.10.0</jackson-data.version>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
         <mvn-javadoc.version>2.10.4</mvn-javadoc.version>
         <mvn-source.version>3.0.1</mvn-source.version>
         <mvn-gpg.version>1.6</mvn-gpg.version>
         <slf4j.version>1.7.25</slf4j.version>
-        <owasp.version>3.1.2</owasp.version>
+        <owasp.version>4.0.2</owasp.version>
         <junit.version>4.12</junit.version>
         <java.version>1.8</java.version>
     </properties>
