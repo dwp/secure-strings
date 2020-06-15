@@ -1,6 +1,9 @@
 package uk.gov.dwp.crypto;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import java.security.InvalidKeyException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -10,85 +13,91 @@ import java.security.InvalidParameterException;
 import java.security.NoSuchAlgorithmException;
 
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class SecureStringsTest {
-    private SecureStrings localSecureString;
-    private SealedObject anObject;
+  private static final String TEST_STRING = "i-am-a-string-to-seal";
+  private SecureStrings classInstance;
+  private SealedObject sealedObject;
 
-    @Before
-    public void setUp() {
-        localSecureString = new SecureStrings();
-        anObject = null;
-    }
+  @Before
+  public void setUp() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
+    classInstance = new SecureStrings();
+    sealedObject = null;
+  }
 
-    @Test
-    public void test_SealString() throws Exception {
-        assertTrue(localSecureString.sealString("APassword") != null);
-    }
+  @Test
+  public void testSealString() throws IOException, IllegalBlockSizeException {
+    assertNotNull(classInstance.sealString("APassword"));
+  }
 
-    @Test
-    public void test_RevealString() throws Exception {
-        anObject = localSecureString.sealString("Test Password");
-        assertTrue(localSecureString.revealString(anObject).equals("Test Password"));
-    }
+  @Test
+  public void testRevealString() throws IOException, IllegalBlockSizeException {
+    sealedObject = classInstance.sealString(TEST_STRING);
+    assertThat(classInstance.revealString(sealedObject), is(equalTo(TEST_STRING)));
+  }
 
-    @Test
-    public void test_RevealString_Null_Object() throws Exception {
-        assertTrue(localSecureString.revealString(null) == null);
-    }
+  @Test
+  public void testRevealstringNullObject() {
+    assertNull(classInstance.revealString(null));
+  }
 
-    @Test
-    public void test_SealString_Null_String() throws Exception {
-        assertTrue(localSecureString.sealString(null) != null);
-    }
+  @Test
+  public void testSealStringNullString() throws IOException, IllegalBlockSizeException {
+    assertNotNull(classInstance.sealString(null));
+  }
 
-    @Test
-    public void test_RevealString_Wrong_Object() throws Exception {
-        SecureStrings testSecureString = new SecureStrings();
-        anObject = testSecureString.sealString("Test Password");
-        assertTrue(localSecureString.revealString(anObject) == null);
-    }
+  @Test
+  public void testRevealStringWrongObject()
+      throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IOException,
+          IllegalBlockSizeException {
+    SecureStrings localInstance = new SecureStrings();
+    sealedObject = localInstance.sealString(TEST_STRING);
+    assertNull(classInstance.revealString(sealedObject));
+  }
 
-    @Test(expected = NoSuchAlgorithmException.class)
-    public void test_To_Validate_Constructor_With_Invalid_Crypto_Type() throws NoSuchAlgorithmException {
-        new SecureStrings("Bob");
-    }
+  @Test(expected = NoSuchAlgorithmException.class)
+  public void testToValidateConstructorWithInvalidCryptoType()
+      throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException {
+    new SecureStrings("Bob");
+  }
 
-    @Test
-    public void test_Storing_String_As_Null_Can_Be_Decrypted() {
-        anObject = localSecureString.sealString(null);
-        assertTrue("This should return null", localSecureString.revealString(anObject) == null);
-    }
+  @Test
+  public void testStoringStringAsNullCanBeDecrypted()
+      throws IOException, IllegalBlockSizeException {
+    sealedObject = classInstance.sealString(null);
+    assertNull("This should return null", classInstance.revealString(sealedObject));
+  }
 
-    @Test
-    public void test_For_escapeJSONObject_With_Valid_JSON_String() throws IOException {
-        String testJsonString = "{" +
-                "\"testBoolean\":true," +
-                "\"testString\":\"string\"," +
-                "\"testInteger\":42" +
-                "}";
-        TestClassForSerialisation testing = SecureStrings.escapedJSONObjectFromString(testJsonString, TestClassForSerialisation.class);
-        assertThat(testing.isTestBoolean(), is(true));
-        assertThat(testing.getTestString(), containsString("string"));
-        assertThat(testing.getTestInteger(), is(42));
-    }
+  @Test
+  public void testForEscapeJsonObjectWithValidJsonString() throws IOException {
+    String testJsonString =
+        "{" + "\"testBoolean\":true," + "\"testString\":\"string\"," + "\"testInteger\":42" + "}";
+    TestClassForSerialisation testing =
+        SecureStrings.escapedJSONObjectFromString(testJsonString, TestClassForSerialisation.class);
+    assertThat(testing.isTestBoolean(), is(true));
+    assertThat(testing.getTestString(), containsString("string"));
+    assertThat(testing.getTestInteger(), is(42));
+  }
 
-    @Test (expected = JsonParseException.class)
-    public void test_For_escapeJSONObject_With_Invalid_JSON_String() throws IOException {
-        String testJsonString = "{" +
-                "\"testBoolean\":true," +
-                "}";
-        TestClassForSerialisation testing = SecureStrings.escapedJSONObjectFromString(testJsonString, TestClassForSerialisation.class);
-        throw new AssertionError("Should never get here!");
-    }
+  @Test(expected = JsonParseException.class)
+  public void testForEscapeJsonObjectWithInvalidJsonString() throws IOException {
+    String testJsonString = "{" + "\"testBoolean\":true," + "}";
 
-    @Test (expected = InvalidParameterException.class)
-    public void test_For_escapeJSONObject_With_Blank_JSON_String() throws IOException {
-        String testJsonString = "";
-        TestClassForSerialisation testing = SecureStrings.escapedJSONObjectFromString(testJsonString, TestClassForSerialisation.class);
-        throw new AssertionError("Should never get here!");
-    }
+    SecureStrings.escapedJSONObjectFromString(testJsonString, TestClassForSerialisation.class);
+    fail("Should have thrown a JsonParseException");
+  }
+
+  @Test(expected = InvalidParameterException.class)
+  public void testForEscapejsonobjectWithBlankJsonString() throws IOException {
+    String testJsonString = "";
+
+    SecureStrings.escapedJSONObjectFromString(testJsonString, TestClassForSerialisation.class);
+    fail("Should have thrown a InvalidParameterException");
+  }
 }

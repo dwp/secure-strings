@@ -1,0 +1,3 @@
+include:
+  - project: 'health-pdu/htds/pipeline/ci-scripts'
+    file: 'maven-base.yml'
