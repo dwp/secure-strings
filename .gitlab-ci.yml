@@ -1,3 +1,41 @@
+variables:
+  # Product
+  PRODUCT: shared
+  BUILD_TYPE: MAVEN
+  MAVEN_IMAGE: "maven:3-jdk-11"
+  MVN_OPTS: "-DLOG_LEVEL=INFO -Dgpg.skip=true"
+  GITHUB_REPO_NAME: secure-strings #open sourced dependency
+  REPO_PATTERN: "V3 CI"
+
+stages:
+  - update-version
+  - code-quality
+  - code-test
+  - component-test
+  - application-build
+  - code-analysis
+  - library-publish
+  - update-project-metadata
+  - create-schedules
+  - open-source
+
 include:
-  - project: 'health-pdu/htds/pipeline/ci-scripts'
-    file: 'maven-base.yml'
+  - local: "/gitlab-ci/includes.yml"
+
+required-fragment-check:
+  variables:
+    RULESET: MAVEN_CI_LIBRARY
+
+create-project-badges:
+  dependencies:
+    - todo-check
+  variables:
+    ARTIFACT_BADGE: "false"
+
+create-develop-nightly-schedule:
+  extends: .add-schedule
+  variables:
+    SCHEDULE_NAME: Nightly-Develop-CI-Build
+    SCHEDULE_BRANCH: develop
+    SCHEDULE_CRON: "0 6 * * *"
+    RANDOMIZE_MINS: "true"
