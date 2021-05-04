@@ -1,8 +1,5 @@
 package uk.gov.dwp.crypto;
 
-import com.fasterxml.jackson.core.SerializableString;
-import com.fasterxml.jackson.core.io.CharacterEscapes;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +11,6 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SealedObject;
 import java.io.IOException;
 import java.security.InvalidKeyException;
-import java.security.InvalidParameterException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 
@@ -25,6 +21,10 @@ public class SecureStrings {
 
   /**
    * Default constructor. Assumes AES encryption, generates a key and sets up the internal ciphers
+   *
+   * @throws NoSuchPaddingException : cipher exception
+   * @throws NoSuchAlgorithmException : cipher exception
+   * @throws InvalidKeyException : cipher exception
    */
   public SecureStrings()
       throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
@@ -98,35 +98,5 @@ public class SecureStrings {
     }
 
     return null;
-  }
-
-  public static <T> T escapedJSONObjectFromString(String inputString, Class<T> type)
-      throws IOException {
-    T returnValue;
-    if (inputString != null && inputString.trim().length() != 0) {
-      final CharacterEscapes jsonCharacterEscapes = generateJSONCharacterEscapes();
-      final ObjectMapper objectMapper = new ObjectMapper();
-      objectMapper.getFactory().setCharacterEscapes(jsonCharacterEscapes);
-      returnValue = objectMapper.readValue(inputString, type);
-    } else {
-      throw new InvalidParameterException("A JSON payload must be specified");
-    }
-    return returnValue;
-  }
-
-  private static CharacterEscapes generateJSONCharacterEscapes() {
-    return new CharacterEscapes() {
-      private static final long serialVersionUID = 11L;
-
-      @Override
-      public int[] getEscapeCodesForAscii() {
-        return standardAsciiEscapesForJSON();
-      }
-
-      @Override
-      public SerializableString getEscapeSequence(final int ch) {
-        return null;
-      }
-    };
   }
 }

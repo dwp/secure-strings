@@ -31,6 +31,19 @@ public class SecureStringsTest {
     sealedObject = null;
   }
 
+  @Test(expected = NoSuchAlgorithmException.class)
+  public void exceptionConstructor()
+      throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
+    new SecureStrings("Not-Valid");
+  }
+
+  @Test
+  public void testSealStringPassingCryptoType()
+      throws IOException, IllegalBlockSizeException, NoSuchPaddingException,
+          NoSuchAlgorithmException, InvalidKeyException {
+    assertNotNull(new SecureStrings("DES").sealString("APassword"));
+  }
+
   @Test
   public void testSealString() throws IOException, IllegalBlockSizeException {
     assertNotNull(classInstance.sealString("APassword"));
@@ -72,32 +85,5 @@ public class SecureStringsTest {
       throws IOException, IllegalBlockSizeException {
     sealedObject = classInstance.sealString(null);
     assertNull("This should return null", classInstance.revealString(sealedObject));
-  }
-
-  @Test
-  public void testForEscapeJsonObjectWithValidJsonString() throws IOException {
-    String testJsonString =
-        "{" + "\"testBoolean\":true," + "\"testString\":\"string\"," + "\"testInteger\":42" + "}";
-    TestClassForSerialisation testing =
-        SecureStrings.escapedJSONObjectFromString(testJsonString, TestClassForSerialisation.class);
-    assertThat(testing.isTestBoolean(), is(true));
-    assertThat(testing.getTestString(), containsString("string"));
-    assertThat(testing.getTestInteger(), is(42));
-  }
-
-  @Test(expected = JsonParseException.class)
-  public void testForEscapeJsonObjectWithInvalidJsonString() throws IOException {
-    String testJsonString = "{" + "\"testBoolean\":true," + "}";
-
-    SecureStrings.escapedJSONObjectFromString(testJsonString, TestClassForSerialisation.class);
-    fail("Should have thrown a JsonParseException");
-  }
-
-  @Test(expected = InvalidParameterException.class)
-  public void testForEscapejsonobjectWithBlankJsonString() throws IOException {
-    String testJsonString = "";
-
-    SecureStrings.escapedJSONObjectFromString(testJsonString, TestClassForSerialisation.class);
-    fail("Should have thrown a InvalidParameterException");
   }
 }
