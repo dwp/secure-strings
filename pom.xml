@@ -45,7 +45,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.version>3.8.1</maven.compiler.version>
-    <jackson-data.version>2.12.3</jackson-data.version>
+    <jackson-data.version>2.13.2.1</jackson-data.version>
     <mvn-javadoc.version>3.2.0</mvn-javadoc.version>
     <mvn-source.version>3.0.1</mvn-source.version>
     <mvn-gpg.version>1.6</mvn-gpg.version>
