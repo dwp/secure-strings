@@ -18,6 +18,7 @@ stages:
   - update-project-metadata
   - create-schedules
   - open-source
+  - repo-gen
 
 include:
   - local: "/gitlab-ci/includes.yml"

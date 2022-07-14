@@ -1,17 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.1.xsd">
-    <suppress>
-        <notes><![CDATA[
-      ignore jackson XMLMapper issue CVE-2016-7051 until fixed -> https://github.com/FasterXML/jackson-core/issues/371
-      ]]></notes>
-        <gav regex="true">com\.fasterxml\.jackson.*:jackson.*</gav>
-        <cve>CVE-2016-7051</cve>
-    </suppress>
-    <suppress>
-        <notes><![CDATA[
-   file name: slf4j-api-1.7.25.jar - WILL BE MITIGATED ONCE A FIXED IN CENTRAL
-   ]]></notes>
-        <gav regex="true">^org\.slf4j:slf4j-api:.*$</gav>
-        <cve>CVE-2018-8088</cve>
-    </suppress>
+
 </suppressions>
