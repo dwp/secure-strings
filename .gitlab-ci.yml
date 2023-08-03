@@ -2,10 +2,11 @@ variables:
   # Product
   PRODUCT: shared
   BUILD_TYPE: MAVEN
-  MAVEN_IMAGE: "maven:3-jdk-11"
+  MAVEN_IMAGE: "maven:3.9.3-eclipse-temurin-17-focal"
   MVN_OPTS: "-DLOG_LEVEL=INFO -Dgpg.skip=true"
   GITHUB_REPO_NAME: secure-strings #open sourced dependency
   REPO_PATTERN: "V3 CI"
+  REPO_OWNER: "Team Health"
 
 stages:
   - update-version
