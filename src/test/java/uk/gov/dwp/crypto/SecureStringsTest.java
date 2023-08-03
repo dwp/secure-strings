@@ -1,26 +1,22 @@
 package uk.gov.dwp.crypto;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import java.security.InvalidKeyException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import org.junit.Before;
-import org.junit.Test;
-
-import javax.crypto.SealedObject;
-import java.io.IOException;
-import java.security.InvalidParameterException;
-import java.security.NoSuchAlgorithmException;
-
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.InvalidKeyException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SealedObject;
+import org.junit.Before;
+import org.junit.Test;
 
 public class SecureStringsTest {
+
   private static final String TEST_STRING = "i-am-a-string-to-seal";
   private SecureStrings classInstance;
   private SealedObject sealedObject;
@@ -40,7 +36,7 @@ public class SecureStringsTest {
   @Test
   public void testSealStringPassingCryptoType()
       throws IOException, IllegalBlockSizeException, NoSuchPaddingException,
-          NoSuchAlgorithmException, InvalidKeyException {
+      NoSuchAlgorithmException, InvalidKeyException {
     assertNotNull(new SecureStrings("DES").sealString("APassword"));
   }
 
@@ -68,7 +64,7 @@ public class SecureStringsTest {
   @Test
   public void testRevealStringWrongObject()
       throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IOException,
-          IllegalBlockSizeException {
+      IllegalBlockSizeException {
     SecureStrings localInstance = new SecureStrings();
     sealedObject = localInstance.sealString(TEST_STRING);
     assertNull(classInstance.revealString(sealedObject));

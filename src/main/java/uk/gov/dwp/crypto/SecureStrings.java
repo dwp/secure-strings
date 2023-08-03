@@ -1,8 +1,5 @@
 package uk.gov.dwp.crypto;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -13,6 +10,8 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SecureStrings {
   private static final Logger LOGGER = LoggerFactory.getLogger(SecureStrings.class.getName());
@@ -89,9 +88,9 @@ public class SecureStrings {
         return (String)
             inputObject.getObject(cipherDecrypt); // using cast to allow for null string input
       } catch (IOException
-          | BadPaddingException
-          | IllegalBlockSizeException
-          | ClassNotFoundException e) {
+               | BadPaddingException
+               | IllegalBlockSizeException
+               | ClassNotFoundException e) {
         LOGGER.error(String.format("error unsealing string : %s", e.getMessage()));
         LOGGER.debug(e.getMessage(), e);
       }
