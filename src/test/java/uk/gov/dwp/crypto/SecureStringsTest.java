@@ -1,85 +1,83 @@
 package uk.gov.dwp.crypto;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SealedObject;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class SecureStringsTest {
+class SecureStringsTest {
 
   private static final String TEST_STRING = "i-am-a-string-to-seal";
   private SecureStrings classInstance;
   private SealedObject sealedObject;
 
-  @Before
-  public void setUp() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
+  @BeforeEach
+  void setUp() throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
     classInstance = new SecureStrings();
     sealedObject = null;
   }
 
-  @Test(expected = NoSuchAlgorithmException.class)
-  public void exceptionConstructor()
-      throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
-    new SecureStrings("Not-Valid");
+  @Test
+  void exceptionConstructor() {
+    assertThatThrownBy(() -> new SecureStrings("Not-Valid"))
+        .isInstanceOf(NoSuchAlgorithmException.class);
   }
 
   @Test
-  public void testSealStringPassingCryptoType()
+  void sealStringPassingCryptoType()
       throws IOException, IllegalBlockSizeException, NoSuchPaddingException,
       NoSuchAlgorithmException, InvalidKeyException {
-    assertNotNull(new SecureStrings("DES").sealString("APassword"));
+    assertThat(new SecureStrings("DES").sealString("APassword")).isNotNull();
   }
 
   @Test
-  public void testSealString() throws IOException, IllegalBlockSizeException {
-    assertNotNull(classInstance.sealString("APassword"));
+  void sealString() throws IOException, IllegalBlockSizeException {
+    assertThat(classInstance.sealString("APassword")).isNotNull();
   }
 
   @Test
-  public void testRevealString() throws IOException, IllegalBlockSizeException {
+  void revealString() throws IOException, IllegalBlockSizeException {
     sealedObject = classInstance.sealString(TEST_STRING);
-    assertThat(classInstance.revealString(sealedObject), is(equalTo(TEST_STRING)));
+    assertThat(classInstance.revealString(sealedObject))
+        .isEqualTo(TEST_STRING);
   }
 
   @Test
-  public void testRevealstringNullObject() {
-    assertNull(classInstance.revealString(null));
+  void revealStringNullObject() {
+    assertThat(classInstance.revealString(null)).isNull();
   }
 
   @Test
-  public void testSealStringNullString() throws IOException, IllegalBlockSizeException {
-    assertNotNull(classInstance.sealString(null));
+  void sealStringNullString() throws IOException, IllegalBlockSizeException {
+    assertThat(classInstance.sealString(null)).isNotNull();
   }
 
   @Test
-  public void testRevealStringWrongObject()
+  void revealStringWrongObject()
       throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IOException,
       IllegalBlockSizeException {
     SecureStrings localInstance = new SecureStrings();
     sealedObject = localInstance.sealString(TEST_STRING);
-    assertNull(classInstance.revealString(sealedObject));
-  }
-
-  @Test(expected = NoSuchAlgorithmException.class)
-  public void testToValidateConstructorWithInvalidCryptoType()
-      throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException {
-    new SecureStrings("Bob");
+    assertThat(classInstance.revealString(sealedObject)).isNull();
   }
 
   @Test
-  public void testStoringStringAsNullCanBeDecrypted()
+  void toValidateConstructorWithInvalidCryptoType() {
+    assertThatThrownBy(() -> new SecureStrings("Bob"))
+        .isInstanceOf(NoSuchAlgorithmException.class);
+  }
+
+  @Test
+  void storingStringAsNullCanBeDecrypted()
       throws IOException, IllegalBlockSizeException {
     sealedObject = classInstance.sealString(null);
-    assertNull("This should return null", classInstance.revealString(sealedObject));
+    assertThat(classInstance.revealString(sealedObject)).as("This should return null").isNull();
   }
 }

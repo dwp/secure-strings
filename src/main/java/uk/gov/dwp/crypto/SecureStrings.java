@@ -13,6 +13,10 @@ import java.security.NoSuchAlgorithmException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * This project is to make it easy to store passwords in an encrypted form using a cipher that is
+ * constructed inside the application and is different for every instance.
+ */
 public class SecureStrings {
   private static final Logger LOGGER = LoggerFactory.getLogger(SecureStrings.class.getName());
   private Cipher cipherEncrypt = null;
