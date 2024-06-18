@@ -45,16 +45,16 @@ include:
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/maven-api-spotbugs'
     ref: 3.4.0
     file: 'ci-include-maven-api-spotbugs.yml'
-  - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/sonarqube'
-    ref: 4-3-2
-    file: 'ci-include-sonar-scanner.yml'
+  - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/gitlab-sast'
+    ref: 2.0.0
+    file: 'ci-include-gitlab-sast-base.yml'
   #package-repository-publish
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/package-registry-publish'
     ref: 1.5.0
     file: 'ci-include-package-publish.yml'
   #update-project-metadata
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/create-project-badges'
-    ref: 2.3.0
+    ref: 2.4.0
     file: 'ci-include-create-project-badges.yml'
   #open-sourcing
   - project: 'dwp/engineering/pipeline-solutions/gitlab/fragments/open-source'

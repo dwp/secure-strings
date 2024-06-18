@@ -3,9 +3,9 @@ schema_version: 1.0.0
 project:
   - project_id: 26390411
     component_name: secure-strings
-    version: 2.1.0
+    version: 2.2.0
     last_verified:
-      date: "2024-05-21"
+      date: "2024-06-18"
       name: "@hakan.bali1"
     tags:
       payments: false
